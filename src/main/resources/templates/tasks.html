@@ -36,7 +36,9 @@
                     <th class="idTask">ID</th>
                     <th class="descriptionTask">Description</th>
                     <th>Status</th>
-                    <th class="completionTimeTask">CompletionTime</th>
+<!--                    <th class="completionTimeTask">CompletionTime</th>-->
+                    <th class="completionTimeTask">CreateTime</th>
+                    <th class="completionTimeTask">UpdateTime</th>
                     <th>Executors</th>
                     <th>Actions</th>
                     <th>Delete</th>
@@ -48,7 +50,9 @@
                     <td class="idTask"  th:text="${task.id}"></td>
                     <td class="descriptionTask" th:text="${task.description}"></td>
                     <td th:text="${task.status}"></td>
-                    <td class="completionTimeTask" th:text="${task.completionTime}"></td>
+<!--                    <td class="completionTimeTask" th:text="${task.completionTime}"></td>-->
+                    <td th:text="${task.createdAt}"></td>
+                    <td th:text="${task.updatedAt}"></td>
                     <td th:text="${task.executors}"></td>
                     <td><a class="linkUpdate" th:href="@{/index/tasks/updateTask/{id}(id=${task.id})}" >Update</a></td>
                     <td><a class="linkDelete" th:href="@{/index/tasks/delete/{id}(id=${task.id})}">Delete</a></td>

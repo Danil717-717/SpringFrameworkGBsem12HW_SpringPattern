@@ -2,7 +2,7 @@ package ru.springgb.sem12HW.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.springgb.sem12HW.model.Executor;
+import ru.springgb.sem12HW.model.entity.Executor;
 import ru.springgb.sem12HW.repository.ExecutorRepository;
 
 import java.util.List;

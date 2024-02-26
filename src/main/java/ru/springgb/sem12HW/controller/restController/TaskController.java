@@ -1,9 +1,12 @@
 package ru.springgb.sem12HW.controller.restController;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
-import ru.springgb.sem12HW.model.Executor;
-import ru.springgb.sem12HW.model.Task;
+import ru.springgb.sem12HW.model.entity.Executor;
+import ru.springgb.sem12HW.model.entity.Task;
+import ru.springgb.sem12HW.model.factory.TaskFactory;
+import ru.springgb.sem12HW.model.factory.TaskFactoryImpl;
 import ru.springgb.sem12HW.service.ExecutorService;
 import ru.springgb.sem12HW.service.TaskService;
 
@@ -16,6 +19,8 @@ public class TaskController {
 
     private final TaskService taskService;
     private final ExecutorService executorService;
+
+    private final TaskFactoryImpl taskFactory;
 
 
 
@@ -31,6 +36,11 @@ public class TaskController {
 
     @PostMapping("/tasks")
     public Task createTask(@RequestBody Task task) {
+        return taskService.createTask(task);
+    }
+    @PostMapping("/tasks/{type}")
+    public Task createTask(@RequestBody Task task,@PathVariable Task.TaskType type) {
+        task = (Task) taskFactory.createTask(type);
         return taskService.createTask(task);
     }
 

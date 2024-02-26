@@ -7,8 +7,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import ru.springgb.sem12HW.model.Executor;
-import ru.springgb.sem12HW.model.Task;
+import ru.springgb.sem12HW.model.entity.Executor;
+import ru.springgb.sem12HW.model.entity.Task;
+import ru.springgb.sem12HW.model.factory.TaskFactoryImpl;
 import ru.springgb.sem12HW.service.ExecutorService;
 import ru.springgb.sem12HW.service.TaskService;
 
@@ -22,10 +23,13 @@ public class TaskViewController {
     private final TaskService taskService;
     private final ExecutorService executorService;
 
+    private final TaskFactoryImpl taskFactory;
+
     @Autowired
-    public TaskViewController(TaskService taskService, ExecutorService executorService) {
+    public TaskViewController(TaskService taskService, ExecutorService executorService, TaskFactoryImpl taskFactory) {
         this.taskService = taskService;
         this.executorService = executorService;
+        this.taskFactory = taskFactory;
     }
     //главная
     @GetMapping
@@ -58,6 +62,13 @@ public class TaskViewController {
         if (result.hasErrors()) {
             return "new";
         }
+        taskService.createTask(task);
+        return "redirect:tasks";
+    }
+
+    @PostMapping("/tasks/{type}")
+    public String create(@ModelAttribute("task") Task task, @PathVariable Task.TaskType type) {
+        task = (Task) taskFactory.createTask(type);
         taskService.createTask(task);
         return "redirect:tasks";
     }

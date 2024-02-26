@@ -3,8 +3,8 @@ package ru.springgb.sem12HW.service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import ru.springgb.sem12HW.model.Executor;
-import ru.springgb.sem12HW.model.Task;
+import ru.springgb.sem12HW.model.entity.Executor;
+import ru.springgb.sem12HW.model.entity.Task;
 
 import java.util.List;
 

@@ -6,8 +6,8 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import ru.springgb.sem12HW.model.Executor;
-import ru.springgb.sem12HW.model.Task;
+import ru.springgb.sem12HW.model.entity.Executor;
+import ru.springgb.sem12HW.model.entity.Task;
 import ru.springgb.sem12HW.repository.ExecutorRepository;
 import ru.springgb.sem12HW.repository.TaskRepository;
 
@@ -20,8 +20,6 @@ public class TaskServiceImpl implements TaskService {
 
     private final TaskRepository taskRepository;
     private final ExecutorRepository repository;
-    private final ExecutorService executorService;
-
 
 
     @Override
@@ -45,7 +43,7 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public List<Task> getAllTasks(String keyword) {
-        if(keyword != null)
+        if (keyword != null)
             return taskRepository.findAll(keyword);
         return taskRepository.findAll();
     }
@@ -65,7 +63,7 @@ public class TaskServiceImpl implements TaskService {
     //&&&&&&&&
     @Override
     public List<Task> getTaskStatus(String status) {
-        List<Task> tasks =   taskRepository.findAll().stream().filter(task -> task.getStatus().equals(status)).toList();
+        List<Task> tasks = taskRepository.findAll().stream().filter(task -> task.getStatus().equals(status)).toList();
         return tasks;
     }
 
@@ -76,12 +74,11 @@ public class TaskServiceImpl implements TaskService {
         if (taskStaraya != null) {
             taskStaraya.setDescription(task.getDescription());
             taskStaraya.setStatus(task.getStatus());
-            taskStaraya.setCompletionTime(task.getCompletionTime());
         }
         return taskStaraya;
     }
 
-    public Task apdateTask(Task task){
+    public Task apdateTask(Task task) {
         return taskRepository.save(task);
     }
 
@@ -110,8 +107,9 @@ public class TaskServiceImpl implements TaskService {
     public List<Executor> findAllExecutor() {
         return repository.findAll();
     }
+
     public Executor getExecutor(Long id) {
-        return findAllExecutor().stream().filter(executor  -> executor.getId().equals(id)).findFirst().orElse(null);
+        return findAllExecutor().stream().filter(executor -> executor.getId().equals(id)).findFirst().orElse(null);
     }
 
     public Executor findByIdExecutor(Long id) {
@@ -120,19 +118,19 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public List<Task> getTasksExecutor(Long id){
+    public List<Task> getTasksExecutor(Long id) {
         Executor executor = findByIdExecutor(id);
         return executor.getTasks();
         //return findByIdExecutor(id).getTasks();
     }
 
     @Override
-    public List<Executor> getExecutorsTask(Long id){
+    public List<Executor> getExecutorsTask(Long id) {
         return getTaskById(id).getExecutors();
     }
 
     @Override
-    public Executor save(Executor executor){
+    public Executor save(Executor executor) {
         return repository.save(executor);
     }
 
@@ -159,22 +157,22 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public Page<Task> findPaginated(Pageable pageable) {
-            int pageSize = pageable.getPageSize();
-            int currentPage = pageable.getPageNumber();
-            int startItem = currentPage * pageSize;
-            List<Task> list;
+        int pageSize = pageable.getPageSize();
+        int currentPage = pageable.getPageNumber();
+        int startItem = currentPage * pageSize;
+        List<Task> list;
 
-            if (taskRepository.findAll().size() < startItem) {
-                list = Collections.emptyList();
-            } else {
-                int toIndex = Math.min(startItem + pageSize, taskRepository.findAll().size());
-                list = taskRepository.findAll().subList(startItem, toIndex);
-            }
+        if (taskRepository.findAll().size() < startItem) {
+            list = Collections.emptyList();
+        } else {
+            int toIndex = Math.min(startItem + pageSize, taskRepository.findAll().size());
+            list = taskRepository.findAll().subList(startItem, toIndex);
+        }
 
-            Page<Task> bookPage
-                    = new PageImpl<Task>(list, PageRequest.of(currentPage, pageSize), taskRepository.findAll().size());
+        Page<Task> bookPage
+                = new PageImpl<Task>(list, PageRequest.of(currentPage, pageSize), taskRepository.findAll().size());
 
-            return bookPage;
+        return bookPage;
     }
 
 

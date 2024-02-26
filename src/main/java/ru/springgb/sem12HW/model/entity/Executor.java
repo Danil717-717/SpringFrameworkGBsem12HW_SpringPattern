@@ -1,4 +1,4 @@
-package ru.springgb.sem12HW.model;
+package ru.springgb.sem12HW.model.entity;
 
 
 import jakarta.persistence.*;

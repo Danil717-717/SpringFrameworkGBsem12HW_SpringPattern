@@ -1,7 +1,7 @@
 package ru.springgb.sem12HW.service;
 
 import org.springframework.stereotype.Service;
-import ru.springgb.sem12HW.model.Executor;
+import ru.springgb.sem12HW.model.entity.Executor;
 
 import java.util.List;
 

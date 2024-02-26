@@ -1,14 +1,13 @@
-package ru.springgb.sem12HW.model;
+package ru.springgb.sem12HW.model.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.SourceType;
 import org.hibernate.annotations.UpdateTimestamp;
-import lombok.Getter;
 
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,15 +15,24 @@ import java.util.List;
 @Getter
 @Setter
 @AllArgsConstructor
-@NoArgsConstructor
-public class Task {
+@Builder
+public class Task implements ITask{
+
+
 
 
     public enum Status{
+        NORMAL_EXECUTION,
+        URGENT_IMPLEMENTATION,
         NOT_STARTED,
         IN_PROGRESS,
         COMPLETED;
 
+    }
+
+    public enum TaskType{
+        NORMAL_EXECUTION,
+        URGENT_IMPLEMENTATION
     }
 
     @Id
@@ -39,9 +47,15 @@ public class Task {
     @Enumerated(EnumType.STRING)
     private Status status;
 
+
     @Column
-    @UpdateTimestamp
-    private LocalDateTime completionTime;
+    @CreationTimestamp(source = SourceType.DB)
+    private Timestamp createdAt;
+
+    @Column
+    @UpdateTimestamp(source = SourceType.DB)
+    private Timestamp updatedAt;
+
 
     @ManyToMany
     @JoinTable(
@@ -49,6 +63,19 @@ public class Task {
             joinColumns = @JoinColumn(name = "task_id"),
             inverseJoinColumns = @JoinColumn(name = "executor_id"))
     private List<Executor> executors = new ArrayList<>();
+
+    public Task() {
+        // Nothing to do
+    }
+
+    public Task(String description) {
+        this.description = description;
+    }
+
+    @Override
+    public Long getTaskId() {
+        return getId();
+    }
 
     public void addExecutor(Executor executor) {
         this.executors.add(executor);
