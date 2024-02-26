@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User List</title>
+        <link th:href="@{/style.css}" rel="stylesheet" />
+</head>
+<body class="body_tasks">
+    <div class="body_title">
+        <h1> Service Task</h1>
+    </div>
+
+    <div>
+        <form class="addbut" th:method="GET" th:action="@{/index/tasks/new}" th:object="${task}">
+        <input class="inputtask" type="submit" value="Add task"/></form>
+    </div>
+
+    <br>
+    <h2 class="body_h2">Tasks: </h2>
+
+    <div>
+        <form th:action="@{/index/tasks}" th:method="GET" th:object="${task}">
+            Filter
+            <input type="text" name="keyword" th:value="${keyword}" placeholder="Find by status" size="50">
+            <button type="submit" class="btn_info" >Search</button>
+            <button type="reset" class="btn_info" >Reset</button>
+        </form>
+    </div>
+
+
+    <div class="tablediv">
+
+        <table border="1" class="tabletask">
+            <thead>
+                <tr>
+                    <th class="idTask">ID</th>
+                    <th class="descriptionTask">Description</th>
+                    <th>Status</th>
+                    <th class="completionTimeTask">CompletionTime</th>
+                    <th>Executors</th>
+                    <th>Actions</th>
+                    <th>Delete</th>
+                    <th>View</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="task:${tasks}">
+                    <td class="idTask"  th:text="${task.id}"></td>
+                    <td class="descriptionTask" th:text="${task.description}"></td>
+                    <td th:text="${task.status}"></td>
+                    <td class="completionTimeTask" th:text="${task.completionTime}"></td>
+                    <td th:text="${task.executors}"></td>
+                    <td><a class="linkUpdate" th:href="@{/index/tasks/updateTask/{id}(id=${task.id})}" >Update</a></td>
+                    <td><a class="linkDelete" th:href="@{/index/tasks/delete/{id}(id=${task.id})}">Delete</a></td>
+                    <td><a class="linkView" th:href="@{/index/tasks/{id}(id=${task.id})}">View</a></td>
+                </tr>
+            </tbody>
+        </table>
+
+
+
+
+
+    </div>
+</body>
+</html>

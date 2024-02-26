@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Executors</title>
+    <link th:href="@{/style.css}" rel="stylesheet" />
+</head>
+<body class="body_tasks">
+    <div class="body_title">
+        <h1> Service Executors</h1>
+    </div>
+
+    <div>
+        <form class="addbut" th:method="GET" th:action="@{/index/executors/newExecutor}" th:object="${executor}">
+            <input class="inputtask" type="submit" value="Add executors"/></form>
+    </div>
+
+    <br>
+    <h2 class="body_h2">Executors: </h2>
+
+    <div class="tablediv">
+        <table border="1" class="tabletask">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Tasks</th>
+                <th>Actions</th>
+                <th>Delete</th>
+                <th>View</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="executor:${executors}">
+                <td th:text="${executor.id}"></td>
+                <td th:text="${executor.name}"></td>
+                <td th:text="${executor.tasks}"></td>
+                <td><a class="linkUpdate" th:href="@{/index/executors/update/{id}(id=${executor.id})}" >Update</a></td>
+                <td><a class="linkDelete" th:href="@{/index/executors/delete/{id}(id=${executor.id})}">Delete</a></td>
+                <td><a class="linkView" th:href="@{/index/executors/{id}(id=${executor.id})}">View</a></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
