@@ -2,8 +2,8 @@ package ru.springgb.sem12HW.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.springgb.sem12HW.model.entity.Executor;
 import ru.springgb.sem12HW.model.entity.Subscriber;
+import ru.springgb.sem12HW.model.entity.Task;
 import ru.springgb.sem12HW.repository.SubscriberRepository;
 
 import java.util.List;
@@ -13,6 +13,8 @@ import java.util.List;
 public class SubscriberServiceImpl implements SubscriberService{
 
     private final SubscriberRepository subscriberRepository;
+    private final TaskService taskService;
+
     @Override
     public List<Subscriber> findAll() {
         return subscriberRepository.findAll();
@@ -52,4 +54,38 @@ public class SubscriberServiceImpl implements SubscriberService{
     public void deleteById(Long id) {
         subscriberRepository.deleteById(id);
     }
+
+    @Override
+    public List<Task> getTasksSubscriber(Long id) {
+        Subscriber subscriber = findById(id);
+        return subscriber.getTasks();
+    }
+    @Override
+    public Subscriber createTaskForSubscriber(Long id, Task task) {
+        Task taskNew = taskService.save(task);
+        Subscriber subscriberNew = findById(id);
+        subscriberNew.addTask(taskNew);
+        return subscriberRepository.save(subscriberNew);
+    }
+
+
+    public List<Task> getListTask(){
+        return taskService.getTasks();
+    }
+
+    @Override
+    public Subscriber assignTask(Long id, Long taskId) {
+        Subscriber subscriber = getSubscriber(id);
+        Task task = taskService.getTaskById(taskId);
+        subscriber.addTask(task);
+        return subscriberRepository.save(subscriber);
+    }
+
+    @Override
+    public void removingTaskFromSubscriber(Long id, Long taskId) {
+        Subscriber subscriber = findById(id);
+        subscriber.removeTask(taskId);
+        save(subscriber);
+    }
+
 }

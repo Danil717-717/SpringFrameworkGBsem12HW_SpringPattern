@@ -1,17 +1,13 @@
 package ru.springgb.sem12HW.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.springgb.sem12HW.model.entity.Executor;
+import ru.springgb.sem12HW.model.entity.Subscriber;
 import ru.springgb.sem12HW.model.entity.Task;
 import ru.springgb.sem12HW.repository.ExecutorRepository;
 import ru.springgb.sem12HW.repository.TaskRepository;
 
-import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -38,6 +34,8 @@ public class TaskServiceImpl implements TaskService {
 
     }
 
+
+
     @Override
     public Task save(Task task) {
         notificationService.notifyCreatedTask(task);
@@ -52,6 +50,9 @@ public class TaskServiceImpl implements TaskService {
         return taskRepository.findAll();
     }
 
+    public List<Task> getTasks() {
+        return taskRepository.findAll();
+    }
 
     @Override
     public Task getTaskById(Long id) {
@@ -104,14 +105,6 @@ public class TaskServiceImpl implements TaskService {
         return taskRepository.save(task);
     }
 
-    @Override
-    public Executor assignTask(Long id, Long taskId) {
-        Executor executor = findByIdExecutor(id);
-        Task task = getTaskById(taskId);
-        executor.addTask(task);
-        return repository.save(executor);
-    }
-
 
     public List<Executor> findAllExecutor() {
         return repository.findAll();
@@ -130,7 +123,6 @@ public class TaskServiceImpl implements TaskService {
     public List<Task> getTasksExecutor(Long id) {
         Executor executor = findByIdExecutor(id);
         return executor.getTasks();
-        //return findByIdExecutor(id).getTasks();
     }
 
     @Override
@@ -139,17 +131,16 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    public List<Subscriber> getSubscriberTask(Long id) {
+        return getTaskById(id).getSubs();
+    }
+
+    @Override
     public Executor save(Executor executor) {
         return repository.save(executor);
     }
 
-    @Override
-    public void removingTaskFromExecutor(Long executorId, Long taskId) {
-        Executor executor = findByIdExecutor(executorId);
-        executor.removeTask(taskId);
-        save(executor);
 
-    }
 
     @Override
     public void removingExecutorFromTask(Long taskId, Long executorId) {
@@ -159,29 +150,10 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public Page<Task> findPaginated(int pageNo, int pageSize) {
-        Pageable pageable = PageRequest.of(pageNo - 1, pageSize);
-        return taskRepository.findAll(pageable);
-    }
-
-    @Override
-    public Page<Task> findPaginated(Pageable pageable) {
-        int pageSize = pageable.getPageSize();
-        int currentPage = pageable.getPageNumber();
-        int startItem = currentPage * pageSize;
-        List<Task> list;
-
-        if (taskRepository.findAll().size() < startItem) {
-            list = Collections.emptyList();
-        } else {
-            int toIndex = Math.min(startItem + pageSize, taskRepository.findAll().size());
-            list = taskRepository.findAll().subList(startItem, toIndex);
-        }
-
-        Page<Task> bookPage
-                = new PageImpl<Task>(list, PageRequest.of(currentPage, pageSize), taskRepository.findAll().size());
-
-        return bookPage;
+    public void removingSubscriberFromTask(Long taskId, Long subscriberId) {
+        Task task = getTaskById(taskId);
+        task.delSubscribe(subscriberId);
+        save(task);
     }
 
 

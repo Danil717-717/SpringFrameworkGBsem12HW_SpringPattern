@@ -3,6 +3,7 @@ package ru.springgb.sem12HW.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.springgb.sem12HW.model.entity.Executor;
+import ru.springgb.sem12HW.model.entity.Task;
 import ru.springgb.sem12HW.repository.ExecutorRepository;
 
 import java.util.List;
@@ -12,6 +13,7 @@ import java.util.List;
 public class ExecutorServiceImpl implements ExecutorService {
 
     private final ExecutorRepository repository;
+    private final TaskService taskService;
 
     @Override
     public List<Executor> findAll() {
@@ -52,4 +54,29 @@ public class ExecutorServiceImpl implements ExecutorService {
         repository.deleteById(id);
     }
 
+
+    @Override
+    public Executor createTaskForExecutor(Long id, Task task) {
+        Task taskNew = taskService.save(task);
+        Executor executorNew = getExecutor(id);
+        executorNew.addTask(taskNew);
+        return repository.save(executorNew);
+
+    }
+
+    @Override
+    public void removingTaskFromExecutor(Long executorId, Long taskId) {
+        Executor executor = getExecutor(executorId);
+        executor.removeTask(taskId);
+        save(executor);
+    }
+
+    @Override
+    public Executor assignTask(Long id, Long taskId) {
+        Executor executor = getExecutor(id);
+        Task task = taskService.getTaskById(taskId);
+        executor.addTask(task);
+        taskService.save(task);
+        return repository.save(executor);
+    }
 }

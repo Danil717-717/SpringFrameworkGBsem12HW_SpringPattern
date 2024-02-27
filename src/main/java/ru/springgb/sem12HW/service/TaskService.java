@@ -1,9 +1,8 @@
 package ru.springgb.sem12HW.service;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.springgb.sem12HW.model.entity.Executor;
+import ru.springgb.sem12HW.model.entity.Subscriber;
 import ru.springgb.sem12HW.model.entity.Task;
 
 import java.util.List;
@@ -17,6 +16,8 @@ public interface TaskService {
 
     List<Task> getAllTasks(String keyword);
 
+    List<Task> getTasks();
+
     Task getTaskById(Long id);
     List<Task> getTaskStatus(Task.Status status);
 
@@ -27,20 +28,20 @@ public interface TaskService {
 
     Task createExecutorForTask(Long id, Executor executor);
 
+
     Task assignExecutor(Long id, Long executorId);
-    Executor assignTask(Long id, Long taskId);
+
     List<Task> getTasksExecutor(Long id);
 
     List<Executor> getExecutorsTask(Long id);
 
+    List<Subscriber> getSubscriberTask(Long id);
+
     Executor save(Executor executor);
 
-    void removingTaskFromExecutor(Long executorId, Long taskId);
+
     void removingExecutorFromTask(Long taskId,Long executorId);
 
+    void removingSubscriberFromTask(Long taskId, Long subscriberId);
 
-    Page<Task> findPaginated(int pageNo, int pageSize);
-
-
-    Page<Task> findPaginated(Pageable pageable);
 }

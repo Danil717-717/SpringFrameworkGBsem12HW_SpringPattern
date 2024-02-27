@@ -95,12 +95,19 @@ public class Task implements ITask{
         }
     }
 
-    public void subscribe(Subscriber sub){
+
+    public void addSubscribe(Subscriber sub){
         subs.add(sub);
     }
 
-    public void delSubscribe(Subscriber sub){
-        subs.remove(sub);
+
+    public void delSubscribe(long subscriberId){
+        Subscriber subscriber = this.subs.stream().filter(t -> t.getId() == subscriberId)
+                .findFirst().orElse(null);
+        if (subscriber != null) {
+            this.subs.remove(subscriber);
+            subscriber.getTasks().remove(this);
+        }
     }
 
     public void notifySubscribers(){

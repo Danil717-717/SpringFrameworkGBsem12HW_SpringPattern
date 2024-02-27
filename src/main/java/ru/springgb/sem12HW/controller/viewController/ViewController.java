@@ -13,34 +13,38 @@ import ru.springgb.sem12HW.model.factory.TaskFactoryImpl;
 import ru.springgb.sem12HW.service.ExecutorService;
 import ru.springgb.sem12HW.service.TaskService;
 
-import java.util.List;
-import java.util.Optional;
-
 import static ru.springgb.sem12HW.model.entity.Task.TaskType.NORMAL_EXECUTION;
 import static ru.springgb.sem12HW.model.entity.Task.TaskType.URGENT_IMPLEMENTATION;
 
 
 @Controller
 @RequestMapping("/index")
-public class TaskViewController {
+public class ViewController {
     private final TaskService taskService;
     private final ExecutorService executorService;
-
     private final TaskFactoryImpl taskFactory;
 
     @Autowired
-    public TaskViewController(TaskService taskService, ExecutorService executorService, TaskFactoryImpl taskFactory) {
+    public ViewController(TaskService taskService, ExecutorService executorService, TaskFactoryImpl taskFactory) {
         this.taskService = taskService;
         this.executorService = executorService;
         this.taskFactory = taskFactory;
     }
-    //главная
+
+
+    /**
+     * Главная страница
+     * @return index
+     */
     @GetMapping
     public String getIndex() {
         return "index";
     }
 
-    //списки тасок и исполнителей
+
+    /**
+     * Получение списков задач и исполнителей
+     */
     @GetMapping("/tasks")
     public String indexTask(Model model, @Param("keyword") String keyword) {
         model.addAttribute("tasks", taskService.getAllTasks(keyword));
@@ -54,12 +58,28 @@ public class TaskViewController {
     }
 
 
-/////////////// получение списков задач и исполнителей
+    /**
+     * Страница добавления новой задачи и нового исполнителя
+     */
+
     @GetMapping("/tasks/new")
     public String newTask(Model model) {
         model.addAttribute("task", new Task());
         return "new";
     }
+
+
+    @GetMapping("/executors/newExecutor")
+    public String newExecutor(Model model) {
+        model.addAttribute("executor", new Executor());
+        return "newExecutor";
+    }
+
+
+    /**
+     * Добавление новой задачи и нового исполнителя
+     */
+
     @PostMapping("/tasks")
     public String create(@ModelAttribute("task") @Valid Task task, BindingResult result) {
         if (result.hasErrors()) {
@@ -85,11 +105,7 @@ public class TaskViewController {
         return "redirect:/index/tasks";
     }
 
-    @GetMapping("/executors/newExecutor")
-    public String newExecutor(Model model) {
-        model.addAttribute("executor", new Executor());
-        return "newExecutor";
-    }
+
     @PostMapping("/executors")
     public String createExecutors(@ModelAttribute("executor") @Valid Executor executor, BindingResult result) {
         if (result.hasErrors()) {
@@ -98,10 +114,11 @@ public class TaskViewController {
         executorService.save(executor);
         return "redirect:executors";
     }
-    /////////////////////
 
 
-/////////// по id
+    /**
+     * Поиск по id задачи и исполнителя
+     */
     @GetMapping("/tasks/{id}")
     public String getTask(@PathVariable Long id, Model model) {
         model.addAttribute("task", taskService.getTaskById(id));
@@ -113,9 +130,11 @@ public class TaskViewController {
         model.addAttribute("executor", executorService.findById(id));
         return "executorProfile";
     }
-//////////////
 
-    ////////изменение
+
+    /**
+     *  Изменение задачи и исполнителя
+     */
     @PostMapping("/tasks/update/{id}")
     private String updateTaskValid(@PathVariable("id") Long id, @ModelAttribute @Valid Task task, BindingResult result) {
         if (result.hasErrors()) {
@@ -149,18 +168,22 @@ public class TaskViewController {
         model.addAttribute("executor", executor);
         return "updateExecutor";
     }
-    /////////
 
-    /////добавление по id
+
+    /**
+     * Добавление по id
+     */
 
     @PostMapping("/tasks/executors/{id}")
     public String addExecutorInTask(@PathVariable Long id,@ModelAttribute("executor") @Valid Executor executor){
         taskService.createExecutorForTask(id,executor);
         return "redirect:/index/taskProfile";
     }
-    ///////
 
-/////////// удаление
+
+    /**
+     * Удаление задачи и исполнителя
+     */
     @GetMapping("/tasks/delete/{id}")
     private String deleteTask(@PathVariable("id") Long id) {
         taskService.deleteById(id);
@@ -172,23 +195,6 @@ public class TaskViewController {
         executorService.deleteById(id);
         return "redirect:/index/executors";
     }
-    ///////////////////
-
-//    @GetMapping({"/searchTask","/searchTask{status}"})
-//    public String searchTaskByTitle(@ModelAttribute("status") @RequestParam("status") Optional<String> status,
-//                                    Model model,Task task){
-//        System.out.println(status);
-//
-//        if(status.isPresent()) {
-//            List<Task> taskList = taskService.getTaskStatus(status.get());
-//            model.addAttribute("task",task);
-//            model.addAttribute("task2", taskList);
-//            return "tasks";
-//        }
-//        else
-//        {
-//            return "task/searchTask";}
-//    }
 
 
 
