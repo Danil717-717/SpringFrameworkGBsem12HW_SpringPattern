@@ -18,7 +18,7 @@ public interface TaskService {
     List<Task> getAllTasks(String keyword);
 
     Task getTaskById(Long id);
-    List<Task> getTaskStatus(String status);
+    List<Task> getTaskStatus(Task.Status status);
 
     Task updateTask(Long id, Task task);
 

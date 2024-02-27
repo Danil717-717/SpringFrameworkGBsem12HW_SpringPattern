@@ -20,10 +20,12 @@ public class TaskServiceImpl implements TaskService {
 
     private final TaskRepository taskRepository;
     private final ExecutorRepository repository;
+    private final NotificationService notificationService;
 
 
     @Override
     public Task createTask(Task task) {
+        notificationService.notifyCreatedTask(task);
         return taskRepository.save(task);
     }
 
@@ -38,11 +40,13 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public Task save(Task task) {
+        notificationService.notifyCreatedTask(task);
         return taskRepository.save(task);
     }
 
     @Override
     public List<Task> getAllTasks(String keyword) {
+        notificationService.notifyListTask(taskRepository.findAll());
         if (keyword != null)
             return taskRepository.findAll(keyword);
         return taskRepository.findAll();
@@ -62,7 +66,8 @@ public class TaskServiceImpl implements TaskService {
 
     //&&&&&&&&
     @Override
-    public List<Task> getTaskStatus(String status) {
+    public List<Task> getTaskStatus(Task.Status status) {
+        notificationService.notifyStutusUpdate(status);
         List<Task> tasks = taskRepository.findAll().stream().filter(task -> task.getStatus().equals(status)).toList();
         return tasks;
     }
@@ -70,17 +75,21 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public Task updateTask(Long id, Task task) {
+
         Task taskStaraya = getTask(id);
         if (taskStaraya != null) {
             taskStaraya.setDescription(task.getDescription());
             taskStaraya.setStatus(task.getStatus());
+            notificationService.notifyStutusUpdate(task.getStatus());
         }
         return taskStaraya;
     }
 
     public Task apdateTask(Task task) {
+        notificationService.notifyStutusUpdate(task.getStatus());
         return taskRepository.save(task);
     }
+
 
     @Override
     public void deleteById(Long id) {

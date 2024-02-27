@@ -64,6 +64,10 @@ public class Task implements ITask{
             inverseJoinColumns = @JoinColumn(name = "executor_id"))
     private List<Executor> executors = new ArrayList<>();
 
+
+    @OneToMany
+    private List<Subscriber> subs = new ArrayList<>();
+
     public Task() {
         // Nothing to do
     }
@@ -88,6 +92,20 @@ public class Task implements ITask{
         if (executor != null) {
             this.executors.remove(executor);
             executor.getTasks().remove(this);
+        }
+    }
+
+    public void subscribe(Subscriber sub){
+        subs.add(sub);
+    }
+
+    public void delSubscribe(Subscriber sub){
+        subs.remove(sub);
+    }
+
+    public void notifySubscribers(){
+        for (Subscriber sub:subs){
+            sub.update();
         }
     }
 
