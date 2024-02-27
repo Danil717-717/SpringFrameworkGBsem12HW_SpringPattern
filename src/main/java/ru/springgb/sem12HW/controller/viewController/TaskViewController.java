@@ -16,6 +16,9 @@ import ru.springgb.sem12HW.service.TaskService;
 import java.util.List;
 import java.util.Optional;
 
+import static ru.springgb.sem12HW.model.entity.Task.TaskType.NORMAL_EXECUTION;
+import static ru.springgb.sem12HW.model.entity.Task.TaskType.URGENT_IMPLEMENTATION;
+
 
 @Controller
 @RequestMapping("/index")
@@ -66,12 +69,22 @@ public class TaskViewController {
         return "redirect:tasks";
     }
 
-    @PostMapping("/tasks/{type}")
-    public String create(@ModelAttribute("task") Task task, @PathVariable Task.TaskType type) {
+    @PostMapping("/tasks/ntype")
+    public String createNTask(@ModelAttribute("task") Task task) {
+        Task.TaskType type = NORMAL_EXECUTION;
         task = (Task) taskFactory.createTask(type);
         taskService.createTask(task);
-        return "redirect:tasks";
+        return "redirect:/index/tasks";
     }
+
+    @PostMapping("/tasks/utype")
+    public String createUTask(@ModelAttribute("task") Task task) {
+        Task.TaskType type = URGENT_IMPLEMENTATION;
+        task = (Task) taskFactory.createTask(type);
+        taskService.createTask(task);
+        return "redirect:/index/tasks";
+    }
+
     @GetMapping("/executors/newExecutor")
     public String newExecutor(Model model) {
         model.addAttribute("executor", new Executor());

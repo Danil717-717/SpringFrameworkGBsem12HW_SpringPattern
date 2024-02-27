@@ -2,15 +2,26 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Reg</title>
+    <title>ADD Task</title>
     <link th:href="@{/style.css}" rel="stylesheet" />
 </head>
-<body>
+<body class="body_tasks">
 
 <div class="addtask">
 
     <h1>Add task</h1>
 
+    <div>
+        <form th:action="@{/index/tasks/ntype}" th:method="POST">
+            <input class="submitFactoryTask" type="submit" value="Create normal execution task"/> </input>
+        </form>
+    </div>
+
+    <div>
+        <form th:action="@{/index/tasks/utype}" th:method="POST">
+            <input class="submitFactoryTask" type="submit" value="Create urgent implementation task"/> </input>
+        </form>
+    </div>
 
     <form th:method="POST" th:action="@{/index/tasks}" th:object="${task}" >
         <div class="descriptionform">

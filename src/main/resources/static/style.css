@@ -116,3 +116,9 @@ form{
     padding-bottom: 10px;
 }
 
+.submitFactoryTask{
+    width: 220px;
+    height: 50px;
+    background-color: cornflowerblue;
+}
+
